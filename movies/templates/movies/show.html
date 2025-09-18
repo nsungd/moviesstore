@@ -9,6 +9,22 @@
         <hr />
         <p><b>Description:</b> {{ template_data.movie.description }}</p>
         <p><b>Price:</b> ${{ template_data.movie.price }}</p>
+        <!-- 👍 Like/Unlike button -->
+  <div class="mb-3">
+  <p><strong>Likes:</strong> {{ template_data.movie.total_likes }}</p>
+  <form action="{% url 'movies.like' template_data.movie.id %}" method="POST">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+      {% if user in template_data.movie.likes.all %}
+        <button type="submit" class="btn btn-danger">Unlike</button>
+      {% else %}
+        <button type="submit" class="btn btn-success">Like</button>
+      {% endif %}
+    {% else %}
+      <a href="{% url 'accounts.login' %}" class="btn btn-outline-primary">Login to Like</a>
+    {% endif %}
+  </form>
+</div>
          <p class="card-text">
           <form method="post"
             action="{% url 'cart.add' id=template_data.movie.id %}">

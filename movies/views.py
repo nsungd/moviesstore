@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Movie, Review
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 def index(request):
     search_term = request.GET.get('search')
     if search_term:
@@ -58,3 +61,16 @@ def delete_review(request, id, review_id):
     review = get_object_or_404(Review, id=review_id, user=request.user)
     review.delete()
     return redirect('movies.show', id=id)
+
+@login_required
+def like_movie(request, id):
+    movie = get_object_or_404(Movie, id=id)
+
+    if request.user in movie.likes.all():
+        # If user already liked → unlike
+        movie.likes.remove(request.user)
+    else:
+        # If user hasn’t liked → like
+        movie.likes.add(request.user)
+
+    return HttpResponseRedirect(reverse('movies.show', args=[id]))
