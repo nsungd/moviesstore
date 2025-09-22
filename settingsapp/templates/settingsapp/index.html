@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Account Security Settings</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.question.label_tag }}
+            {{ form.question }}
+        </div>
+        <div class="mb-3">
+            {{ form.answer.label_tag }}
+            {{ form.answer }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}
