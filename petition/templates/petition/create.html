@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Create a New Petition</h2>
+  <hr>
+
+  {% if template_data.error %}
+    <div class="alert alert-danger">
+      {{ template_data.error }}
+    </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="title" class="form-label">Petition Title</label>
+      <input type="text" id="title" name="title" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="movie_name" class="form-label">Movie Name</label>
+      <input type="text" id="movie_name" name="movie_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-dark">Submit Petition</button>
+    <a href="{% url 'petition:index' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}
+

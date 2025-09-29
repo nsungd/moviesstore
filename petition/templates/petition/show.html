@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ template_data.petition.title }}</h2>
+  <p><strong>Movie Requested:</strong> {{ template_data.petition.movie_name }}</p>
+  <p><strong>Description:</strong> {{ template_data.petition.description }}</p>
+  <p><strong>Created by:</strong> {{ template_data.petition.created_by.username }}</p>
+  <p><strong>Total Votes:</strong> {{ template_data.petition.votes.count }}</p>
+
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'petition:vote' template_data.petition.id %}">
+      {% csrf_token %}
+      {% if template_data.user_has_voted %}
+        <button type="submit" class="btn btn-warning">Remove Vote</button>
+      {% else %}
+        <button type="submit" class="btn btn-success">Vote for Petition</button>
+      {% endif %}
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to vote on this petition.</p>
+  {% endif %}
+
+  <div class="mt-3">
+    <a href="{% url 'petition:index' %}" class="btn btn-secondary">Back to Petitions</a>
+  </div>
+</div>
+{% endblock %}

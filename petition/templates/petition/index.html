@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Petitions</h2>
+    {% if user.is_authenticated %}
+      <a href="{% url 'petition:create' %}" class="btn btn-success">
+        + Create Petition
+      </a>
+    {% else %}
+      <a href="{% url 'accounts.login' %}" class="btn btn-outline-primary">
+        Login to Create Petition
+      </a>
+    {% endif %}
+  </div>
+  <hr>
+
+  {% if template_data.petitions %}
+    <ul class="list-group">
+      {% for petition in template_data.petitions %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <a href="{% url 'petition:show' petition.id %}">
+              {{ petition.title }} — {{ petition.movie_name }}
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No petitions yet. 
+      {% if user.is_authenticated %}
+        <a href="{% url 'petition:create' %}">Start one!</a>
+      {% else %}
+        <a href="{% url 'accounts.login' %}">Login to start one!</a>
+      {% endif %}
+    </p>
+  {% endif %}
+</div>
+{% endblock %}
