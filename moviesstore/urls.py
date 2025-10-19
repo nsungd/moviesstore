@@ -25,7 +25,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('cart/', include('cart.urls')),
     path("liked/", include("liked.urls")),
-    path("petition/", include("petition.urls")),  
+    path("petition/", include("petition.urls")), 
+    path('map/', include('popularityMap.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'accounts',
     'cart',
     'liked',
-    'petition'
+    'petition',
+    'popularityMap'
 ]
 
 MIDDLEWARE = [

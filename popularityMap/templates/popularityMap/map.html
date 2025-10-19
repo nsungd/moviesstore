@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3 text-center">🎬 Movie Popularity by Region</h2>
+
+  <div class="text-center mb-3">
+    <label for="regionSelect" class="form-label fw-bold">Select a Region:</label>
+    <select id="regionSelect" class="form-select w-auto d-inline-block">
+      <option value="">-- Select Region --</option>
+      <option value="NA">North America</option>
+      <option value="EU">Europe</option>
+      <option value="AS">Asia</option>
+      <option value="SA">South America</option>
+      <option value="AF">Africa</option>
+      <option value="OC">Oceania</option>
+    </select>
+  </div>
+
+  <div id="map" style="height: 500px;"></div>
+</div>
+
+<!-- Leaflet.js -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  const regionMovies = {{ region_top_movies|safe }};
+  
+  const regionCoords = {
+    'NA': [40.0, -100.0],
+    'EU': [54.0, 15.0],
+    'AS': [34.0, 100.0],
+    'SA': [-15.0, -60.0],
+    'AF': [0.0, 20.0],
+    'OC': [-25.0, 133.0],
+  };
+
+  const map = L.map('map').setView([20, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 5,
+  }).addTo(map);
+
+  for (const [region, data] of Object.entries(regionMovies)) {
+    const coords = regionCoords[region];
+    if (coords) {
+      const marker = L.marker(coords).addTo(map);
+      marker.bindPopup(`<b>${data.movie}</b><br>Purchases: ${data.count}<br><i>${region}</i>`);
+    }
+  }
+
+  let marker = null;
+
+  const selectEl = document.getElementById('regionSelect');
+  selectEl.addEventListener('change', function() {
+    const region = this.value;
+
+    if (!region) {
+      if (marker) map.removeLayer(marker);
+      map.setView([20, 0], 2);
+      return;
+    }
+
+    const data = regionMovies[region];
+    const coords = regionCoords[region];
+
+    if (!data) {
+      alert("No data for this region yet!");
+      return;
+    }
+
+    if (marker) map.removeLayer(marker);
+
+    marker = L.marker(coords).addTo(map);
+    marker.bindPopup(`<b>${data.movie}</b><br>Purchases: ${data.count}`).openPopup();
+
+    map.setView(coords, 3);
+  });
+</script>
+{% endblock %}
